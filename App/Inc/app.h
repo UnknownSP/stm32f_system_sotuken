@@ -7,13 +7,13 @@
 int appTask(void);
 int appInit(void);
 
-#define DD_NUM_OF_MD 6
-#define DD_NUM_OF_AB 1
+#define DD_NUM_OF_MD 4
+#define DD_NUM_OF_AB 0
 
 #define DD_NUM_OF_LD 0
 #define DD_NUM_OF_SS 1
-#define DD_USE_ENCODER1 1
-#define DD_USE_ENCODER2 1
+#define DD_USE_ENCODER1 0
+#define DD_USE_ENCODER2 0
 #define DD_NUM_OF_SV 0
 
 #define USE_RASPI_CONTROL 0

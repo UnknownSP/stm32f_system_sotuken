@@ -59,7 +59,7 @@ int DD_receive2SS(void){
   case D_STYP_ENCODER:
   case D_STYP_ODMETRY:
     encoder_wait[temp_data]++;
-    if(phase == TRANSMIT_PHASE ){//|| phase == RECEIVE_PHASE){
+    if(phase == TRANSMIT_PHASE){
       if(encoder_wait[temp_data] >= 2){
 	      encoder_wait[temp_data] = 0;
 	      ret = Read_ENCODER(&g_ss_h[temp_data]);

@@ -20,11 +20,14 @@
 #include "DD_SS.h"
 #include "DD_ENCODER.h"
 #include "message.h"
+#include "SystemTaskManager.h"
 
 /*I2Cのサポート用関数*/
 int DD_I2C1Send(uint8_t add, const uint8_t *data, uint8_t size){
   int ret = MW_I2C1Transmit(add, data, size);
-  if(ret)message("err","I2C1 trans faild \n addr:[%x],size:[%d],data:[0x%02x]",add,size,data[0]);
+  if( g_SY_system_counter % _MESSAGE_INTERVAL_MS < _INTERVAL_MS ){
+    if(ret)message("err","I2C1 trans faild \n addr:[%x],size:[%d],data:[0x%02x]",add,size,data[0]);
+  }
   //return ret;
   return 0;
 }
@@ -96,10 +99,10 @@ int DD_doTasks(void){
     DD_receive2SS();
     count = 0;
   }
-  /* if(first_flag){ */
-  /*   DD_receive2SS(); */
-  /*   first_flag = false; */
-  /* } */
+  //if(first_flag){ 
+  //  DD_receive2SS(); 
+  //  first_flag = false; 
+  //}
 #endif
 #if DD_USE_ENCODER1
   ret = DD_encoder1update();

@@ -238,6 +238,8 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
     PB10     ------> I2C2_SCL
     PB11     ------> I2C2_SDA 
     */
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+
     GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_11;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
@@ -247,7 +249,7 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
     __HAL_RCC_I2C2_CLK_ENABLE();
   /* USER CODE BEGIN I2C2_MspInit 1 */
     /*InitDMA*/
-    __HAL_RCC_DMA1_CLK_ENABLE();
+    //__HAL_RCC_DMA1_CLK_ENABLE();
     /*## Configure the DMA ##################################################*/
     /* Configure the DMA handler for Receive process */
     hdma_irx.Instance                 = DMA1_Channel5;
@@ -257,7 +259,7 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
     hdma_irx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
     hdma_irx.Init.MemDataAlignment    = DMA_MDATAALIGN_BYTE;
     hdma_irx.Init.Mode                = DMA_NORMAL;
-    hdma_irx.Init.Priority            = DMA_PRIORITY_LOW;
+    hdma_irx.Init.Priority            = DMA_PRIORITY_VERY_HIGH;
 
     HAL_DMA_Init(&hdma_irx);
 
@@ -272,7 +274,7 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
     hdma_itx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
     hdma_itx.Init.MemDataAlignment    = DMA_MDATAALIGN_BYTE;
     hdma_itx.Init.Mode                = DMA_NORMAL;
-    hdma_itx.Init.Priority            = DMA_PRIORITY_LOW;
+    hdma_itx.Init.Priority            = DMA_PRIORITY_VERY_HIGH;
 
     HAL_DMA_Init(&hdma_itx);
 
@@ -280,22 +282,23 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
     __HAL_LINKDMA(hi2c, hdmatx, hdma_itx);
 
     /*## Configure the NVIC for DMA #########################################*/
+    __HAL_RCC_DMA1_CLK_ENABLE();
     /* NVIC configuration for DMA transfer complete interrupt (I2C2_TX) */
-    HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, 0, 1);
+    HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, 0, 0);
     //DMA1_Channel4_IRQHandler
     HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
 
     /* NVIC configuration for DMA transfer complete interrupt (I2C2_RX) */
-    HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 0, 1);
+    HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 0, 0);
     //DMA1_Channel5_IRQHandler
     HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
 
     /* NVIC configuration for I2C, to catch the I2C2 event and I2C2 error */
-    HAL_NVIC_SetPriority(I2C2_EV_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(I2C2_EV_IRQn);
+    //HAL_NVIC_SetPriority(I2C2_EV_IRQn, 0, 0);
+    //HAL_NVIC_EnableIRQ(I2C2_EV_IRQn);
 
-    HAL_NVIC_SetPriority(I2C2_ER_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(I2C2_ER_IRQn);
+    //HAL_NVIC_SetPriority(I2C2_ER_IRQn, 0, 0);
+    //HAL_NVIC_EnableIRQ(I2C2_ER_IRQn);
 
   /* USER CODE END I2C2_MspInit 1 */
   }

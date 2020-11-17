@@ -130,17 +130,7 @@ int appTask(void){
 		target_position[2] = 0;
 	}
 
-	go_to_target(target_position,now_position,false);
-
-	if(__RC_ISPRESSED_R1(g_rc_data)){
-		g_md_h[ARM_SPIN_MD].mode = D_MMOD_BACKWARD;
-		g_md_h[ARM_SPIN_MD].duty = ARM_SPIN_MAX_DUTY;
-	}else if(__RC_ISPRESSED_R2(g_rc_data)){
-		g_md_h[ARM_SPIN_MD].mode = D_MMOD_FORWARD;
-		g_md_h[ARM_SPIN_MD].duty = ARM_SPIN_MAX_DUTY;
-	}else{
-		g_md_h[ARM_SPIN_MD].mode = D_MMOD_BRAKE;
-	}
+	//go_to_target(target_position,now_position,false);
 
 	if(__RC_ISPRESSED_L2(g_rc_data)){
 		adjust_flag[0] = true;
@@ -153,6 +143,26 @@ int appTask(void){
 		adjust_flag[0] = false;
 		adjust_flag[1] = false;
 		adjust_flag[2] = false;
+	}
+	
+	int rc_analogdata = DD_RCGetRY(g_rc_data);
+
+	for(i=0;i<4;i++){
+		if(abs(rc_analogdata)==0){
+			g_md_h[i].mode = D_MMOD_FREE;
+    	  	g_md_h[i].duty = 0;
+    	}
+    	else{
+    	  if(rc_analogdata > 0){
+		/*前後の向き判定*/
+			g_md_h[i].mode = D_MMOD_FORWARD;
+    	  }
+    	  else{
+			g_md_h[i].mode = D_MMOD_BACKWARD;
+    	  }
+    	  /*絶対値を取りDutyに格納*/
+    	  	g_md_h[i].duty = abs(rc_analogdata) * MD_GAIN;
+    	}
 	}
 
 	//manual_omni_suspension();
